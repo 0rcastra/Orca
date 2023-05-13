@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/0rcastra/Orca/internal/data"
@@ -26,17 +25,6 @@ func SetHandler(w http.ResponseWriter, r *http.Request) {
 	db.Set(key, value)
 
 	// Send the response back to the client
-	response := SetResponse{
-		Key:   key,
-		Value: value,
-	}
-
-	jsonResponse, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(jsonResponse)
+	w.Write([]byte("OK"))
 }
