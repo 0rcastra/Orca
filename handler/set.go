@@ -1,11 +1,17 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/0rcastra/Orca/internal/data"
 	"github.com/gorilla/mux"
 )
+
+type SetResponse struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
 
 func SetHandler(w http.ResponseWriter, r *http.Request) {
 	// Extract the key and value from the request URL path parameters
@@ -20,6 +26,17 @@ func SetHandler(w http.ResponseWriter, r *http.Request) {
 	db.Set(key, value)
 
 	// Send the response back to the client
+	response := SetResponse{
+		Key:   key,
+		Value: value,
+	}
+
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	w.Write(jsonResponse)
 }
