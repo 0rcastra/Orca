@@ -20,7 +20,7 @@ jobs:
           go-version: 1.19 
 
       - name: Check code formatting using gofmt
-        run: gofmt -l -e -s ./
+      - run: gofmt -l -e -s ./
         
 
         
