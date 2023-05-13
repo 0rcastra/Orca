@@ -12,12 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Checkout repository
+      - name: Check code formatting using gofmt
         uses: Jerome1337/gofmt-action@v1.0.5
         with:
          gofmt-path: './src'
          gofmt-flags: '-l -d'
-      - name: Check code formatting using gofmt
       - run: gofmt -l -e -s ./
         
 
