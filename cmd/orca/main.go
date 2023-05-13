@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/0rcastra/Orca/handler"
+	"github.com/0rcastra/Orca/internal/data"
 	"github.com/0rcastra/Orca/middleware"
 	"github.com/gorilla/mux"
 )
@@ -21,9 +22,12 @@ func main() {
 	// Create the router
 	r := mux.NewRouter()
 	r.Use(middleware.LoggingMiddleware)
+	db := data.NewDatabase()
+	h := handler.NewHandler(db)
 
 	// Defining the commands
-	r.HandleFunc("/set/{key}/{value}", handler.SetHandler).Methods("POST")
+	r.HandleFunc("/set/{key}/{value}", h.SetHandler).Methods("POST")
+	r.HandleFunc("/get/{key}", h.GetHandler).Methods("GET")
 
 	// Create the HTTP server
 	server := &http.Server{
