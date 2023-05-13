@@ -6,7 +6,9 @@ import (
 	"github.com/0rcastra/Orca/internal/data"
 )
 
-type SetCommand struct{}
+type SetCommand struct {
+	Database *data.Database
+}
 
 func (c *SetCommand) Name() string {
 	return "set"
@@ -20,8 +22,7 @@ func (c *SetCommand) Execute(args []string) error {
 	key := args[0]
 	value := args[1]
 
-	db := data.NewDatabase()
-	db.Set(key, value)
+	c.Database.Set(key, value)
 
 	fmt.Printf("OK\n")
 
