@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/0rcastra/Orca/handler"
+	"github.com/0rcastra/Orca/middleware"
 	"github.com/gorilla/mux"
 )
 
@@ -19,8 +20,7 @@ func main() {
 
 	// Create the router
 	r := mux.NewRouter()
-
-	r.Use(loggingMiddleware)
+	r.Use(middleware.LoggingMiddleware)
 
 	// Defining the commands
 	r.HandleFunc("/set/{key}/{value}", handler.SetHandler).Methods("POST")
@@ -40,14 +40,4 @@ func main() {
 		log.Fatal(err)
 		os.Exit(1)
 	}
-}
-
-func loggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Log the incoming request
-		log.Printf("Received request: %s %s", r.Method, r.RequestURI)
-
-		// Call the next handler
-		next.ServeHTTP(w, r)
-	})
 }
