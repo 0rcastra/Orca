@@ -16,19 +16,19 @@ type Command interface {
 	Execute(args []string) error
 }
 
-// To creates a new CLI instance.
+// NewCLI creates a new CLI instance.
 func NewCLI() *CLI {
 	return &CLI{
 		commands: make(map[string]Command),
 	}
 }
 
-// To registers a command with the CLI.
+// RegisterCommand registers a command with the CLI.
 func (cli *CLI) RegisterCommand(command Command) {
 	cli.commands[command.Name()] = command
 }
 
-// starts the CLI.
+// Run starts the CLI.
 func (cli *CLI) Run() {
 	scanner := bufio.NewScanner(os.Stdin)
 
