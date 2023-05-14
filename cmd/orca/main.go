@@ -28,6 +28,7 @@ func main() {
 	// Defining the commands
 	r.HandleFunc("/set/{key}/{value}", h.SetHandler).Methods("POST")
 	r.HandleFunc("/get/{key}", h.GetHandler).Methods("GET")
+	r.HandleFunc("/del/{key}", h.DelHandler).Methods("DELETE")
 
 	// Create the HTTP server
 	server := &http.Server{
