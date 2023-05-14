@@ -3,7 +3,7 @@
 Redis like dictionary server in Go
 - [x] SET
 - [x] GET
-- [ ] DEL
+- [x] DEL
 - [ ] INCR
 - [ ] DECR
 - [ ] EXISTS
