@@ -32,8 +32,8 @@ func (h *Handler) GetHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetResponse represents the response for the GET request.
 type GetResponse struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	Key   string      `json:"key"`
+	Value interface{} `json:"value"`
 }
 
 // ErrorResponse represents the error response.
