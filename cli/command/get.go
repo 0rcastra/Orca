@@ -21,7 +21,7 @@ func (c *GetCommand) Execute(args []string) error {
 
 	key := args[0]
 
-	value, exists := data.Get(c.Database, key)
+	value, exists := c.Database.Get(key)
 	if !exists {
 		return fmt.Errorf("key %s not found", key)
 	}
