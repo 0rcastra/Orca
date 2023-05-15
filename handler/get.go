@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/0rcastra/Orca/internal/data"
 	"github.com/gorilla/mux"
 )
 
@@ -16,7 +15,7 @@ func (h *Handler) GetHandler(w http.ResponseWriter, r *http.Request) {
 	key := vars["key"]
 
 	// Retrieve the value from the data store
-	value, exists := data.Get(h.db, key)
+	value, exists := h.db.Get(key)
 	if !exists {
 		// Key not found
 		w.WriteHeader(http.StatusNotFound)

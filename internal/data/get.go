@@ -1,6 +1,6 @@
 package data
 
-func Get(db *Database, key string) (string, bool) {
+func (db *Database) Get(key string) (string, bool) {
 	db.mutex.RLock()
 	defer db.mutex.RUnlock()
 
