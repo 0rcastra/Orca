@@ -2,6 +2,7 @@ package data
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func (db *Database) Incr(key string) (int, error) {
@@ -10,17 +11,17 @@ func (db *Database) Incr(key string) (int, error) {
 
 	value, exists := db.data[key]
 	if !exists {
-		db.data[key] = 1
+		db.data[key] = "1"
 		return 1, nil
 	}
 
-	intValue, ok := value.(int)
-	if !ok {
-		return 0, fmt.Errorf("value for key '%s' is not an integer", key)
+	intValue, err := strconv.Atoi(value)
+	if err != nil {
+		return 0, fmt.Errorf("value for key '%s' is not a valid integer: %w", key, err)
 	}
 
 	intValue++
-	db.data[key] = intValue
+	db.data[key] = strconv.Itoa(intValue)
 
 	return intValue, nil
 }
