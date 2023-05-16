@@ -6,29 +6,46 @@ on:
     branches: [main, release-*]
 
 jobs:
-  coverage:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+    - name: Set up Go 1.19
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.19
 
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.19
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
 
-      - name: Run tests with coverage
-        run: go test -race -coverprofile=coverage.out ./...
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
 
-      - name: Install gocov-xml
-        run: go install github.com/AlekSi/gocov-xml@latest
+    - name: Test
+      run: go test -v ./...
 
-      - name: Generate Cobertura XML report
-        run: |
-          go tool cover -func=coverage.out | awk '{gsub(/\./, "/", $1); printf("%s\t%s\t%s\n", $1, $3, $2)}' > coverage.txt
-          gocov-xml < coverage.txt > coverage.xml
+    - name: Install gocov
+      run: go get github.com/axw/gocov/gocov
 
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.COVERALLS_TOKEN }}
-          path-to-lcov: coverage.xml
+    - name: Generate coverage report
+      run: |
+        gocov test ./... > coverage.json
+
+    - name: Install gocov-to-cobertura
+      run: go get github.com/AlekSi/gocov-xml
+
+    - name: Convert coverage report to Cobertura format
+      run: gocov-xml < coverage.json > coverage.xml
+
+    - name: Install coveralls
+      run: go get github.com/mattn/goveralls
+
+    - name: Send coverage report to Coveralls
+      run: |
+        goveralls -coverprofile=coverage.xml -service=github -repotoken ${{ secrets.COVERALLS_TOKEN }} 
