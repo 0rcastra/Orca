@@ -32,12 +32,13 @@ jobs:
         go get github.com/axw/gocov/gocov
         echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
-    - name: Test
-      run: go test -v ./...
-
-    - name: Generate coverage report
+    - name: Test and generate coverage data
       run: |
-        gocov test ./... > coverage.json
+        go test -coverprofile=coverage.out ./...
+
+    - name: Convert coverage data to gocov's JSON format
+      run: |
+        gocov convert coverage.out > coverage.json
 
     - name: Install gocov-to-cobertura
       run: |
