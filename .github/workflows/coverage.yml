@@ -14,24 +14,22 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.19
+          go-version: 1.16
 
-      - name: Install dependencies
-        run: go mod download
+      - name: Install go-acc
+        run: go install github.com/ory/go-acc@latest
+
+      - name: Install gocover-cobertura
+        run: go install github.com/t-yuki/gocover-cobertura@latest
 
       - name: Run tests with coverage
-        run: go test -race -coverprofile=coverage.out ./...
+        run: go-acc ./... -- -race -covermode=atomic -coverprofile=coverage.out
 
-      - name: Install gocov
-        run: go get github.com/axw/gocov/gocov
-
-      - name: Convert coverage profile to JSON format
-        run: gocov convert coverage.out | gocov report > coverage.json
-
-      - name: Install goveralls
-        run: go get github.com/mattn/goveralls
+      - name: Convert coverage profile to Cobertura XML
+        run: gocover-cobertura < coverage.out > coverage.xml
 
       - name: Upload coverage to Coveralls
-        env:
-          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-        run: goveralls -coverprofile=coverage.json -service=github
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.COVERALLS_TOKEN }}
+          path-to-lcov: coverage.xml
