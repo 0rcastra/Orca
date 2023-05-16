@@ -18,6 +18,9 @@ jobs:
          gofmt-path: './src'
          gofmt-flags: '-l -d'
       - run: gofmt -l -e -s ./
+      
+      - name: Run tests
+        run: go test ./test/...
         
 
         
