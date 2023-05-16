@@ -30,7 +30,9 @@ jobs:
       run: ls -la
 
     - name: Install goveralls
-      run: go get github.com/mattn/goveralls
+      run: |
+        go install github.com/mattn/goveralls@latest
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
     - name: Coveralls
-      run: $(go env GOPATH)/bin/goveralls -coverprofile=coverage.out -service=github -repotoken ${{ secrets.COVERALLS_TOKEN }}
+      run: goveralls -coverprofile=coverage.out -service=github -repotoken ${{ secrets.COVERALLS_TOKEN }}
