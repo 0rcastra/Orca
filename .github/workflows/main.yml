@@ -28,13 +28,6 @@ jobs:
       - name: Run tests
         run: go test ./test/...
         
- coveralls:   
-   name: Coveralls
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v3
-     - name: Coveralls GitHub Action
-       uses: coverallsapp/github-action@v1
 
   
 
