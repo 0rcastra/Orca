@@ -27,25 +27,31 @@ jobs:
             dep ensure
         fi
 
+    - name: Install gocov
+      run: |
+        go get github.com/axw/gocov/gocov
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+
     - name: Test
       run: go test -v ./...
-
-    - name: Install gocov
-      run: go get github.com/axw/gocov/gocov
 
     - name: Generate coverage report
       run: |
         gocov test ./... > coverage.json
 
     - name: Install gocov-to-cobertura
-      run: go get github.com/AlekSi/gocov-xml
+      run: |
+        go get github.com/AlekSi/gocov-xml
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
     - name: Convert coverage report to Cobertura format
       run: gocov-xml < coverage.json > coverage.xml
 
     - name: Install coveralls
-      run: go get github.com/mattn/goveralls
+      run: |
+        go get github.com/mattn/goveralls
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
     - name: Send coverage report to Coveralls
       run: |
-        goveralls -coverprofile=coverage.xml -service=github -repotoken ${{ secrets.COVERALLS_TOKEN }} 
+        goveralls -coverprofile=coverage.xml -service=github -repotoken ${{ secrets.COVERALLS_TOKEN }}
