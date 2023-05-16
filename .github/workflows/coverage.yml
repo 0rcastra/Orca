@@ -34,11 +34,7 @@ jobs:
 
     - name: Test and generate coverage data
       run: |
-        go test -coverprofile=coverage.out ./...
-
-    - name: Convert coverage data to gocov's JSON format
-      run: |
-        gocov convert coverage.out > coverage.json
+        gocov test ./... > coverage.json
 
     - name: Install gocov-to-cobertura
       run: |
