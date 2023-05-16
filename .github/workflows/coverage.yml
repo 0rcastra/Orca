@@ -6,25 +6,32 @@ on:
     branches: [main, release-*]
 
 jobs:
-  test:
-    name: Test with Coverage
+  coverage:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: '1.19'
-    - name: Check out code
-      uses: actions/checkout@v2
-    - name: Install dependencies
-      run: |
-        go mod download
-    - name: Run Unit tests
-      run: |
-        go test -race -covermode atomic -coverprofile=covprofile ./...
-    - name: Install goveralls
-      run: go install github.com/mattn/goveralls@latest
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.COVERALLS_TOKEN }}
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run tests with coverage
+        run: go test -race -coverprofile=coverage.out ./...
+
+      - name: Install gocov
+        run: go get github.com/axw/gocov/gocov
+
+      - name: Convert coverage profile to JSON format
+        run: gocov convert coverage.out | gocov report > coverage.json
+
+      - name: Install goveralls
+        run: go get github.com/mattn/goveralls
+
+      - name: Upload coverage to Coveralls
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+        run: goveralls -coverprofile=coverage.json -service=github
