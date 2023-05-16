@@ -1,0 +1,25 @@
+on:
+  push:
+    branches: [main, release-*]
+  pull_request:
+    branches: [main, release-*]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: Install dependencies
+        run: go mod download
+      - name: Run tests with coverage
+        run: go test -race -coverprofile=coverage.out ./...
+      - name: Convert coverage profile to Coveralls format
+        run: go get github.com/mattn/goveralls
+      - name: Upload coverage to Coveralls
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+        run: goveralls -coverprofile=coverage.out -service=github
