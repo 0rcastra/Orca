@@ -16,17 +16,14 @@ jobs:
         with:
           go-version: 1.19
 
-      - name: Install go-acc
-        run: go install github.com/ory/go-acc@latest
-
-      - name: Install gocov-xml
-        run: go install github.com/AlekSi/gocov-xml@latest
-
       - name: Run tests with coverage
-        run: go-acc ./... -- -race -covermode=atomic -coverprofile=coverage.out
+        run: go test -race -coverprofile=coverage.out ./...
 
-      - name: Convert coverage profile to Cobertura XML
-        run: gocov convert coverage.out | gocov-xml > coverage.xml
+      - name: Generate Cobertura XML report
+        run: |
+          go get github.com/t-yuki/gocover-cobertura
+          go tool cover -html=coverage.out -o coverage.html
+          gocover-cobertura < coverage.out > coverage.xml
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@master
