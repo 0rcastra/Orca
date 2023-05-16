@@ -5,6 +5,7 @@ import (
 	"strconv"
 )
 
+// just to test Workflow
 func (db *Database) Decr(key string) (int, error) {
 	db.mutex.Lock()
 	defer db.mutex.Unlock()
