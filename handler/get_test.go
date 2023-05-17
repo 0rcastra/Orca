@@ -15,6 +15,7 @@ func TestGetHandler(t *testing.T) {
 	db := data.NewDatabase()
 	db.Set("name", "Seongbin")
 
+	// Test case 1: Key exists
 	req := httptest.NewRequest(http.MethodGet, "/get/name", nil)
 	res := httptest.NewRecorder()
 
@@ -41,5 +42,25 @@ func TestGetHandler(t *testing.T) {
 	}
 	if response.Value != expectedValue {
 		t.Errorf("unexpected response value: got %s, want %s", response.Value, expectedValue)
+	}
+
+	// Test case 2: Key does not exist
+	req = httptest.NewRequest(http.MethodGet, "/get/nonexistent", nil)
+	res = httptest.NewRecorder()
+
+	router.ServeHTTP(res, req)
+
+	if res.Code != http.StatusNotFound {
+		t.Errorf("unexpected status code: got %d, want %d", res.Code, http.StatusNotFound)
+	}
+
+	var errorResponse handler.ErrorResponse
+	if err := json.NewDecoder(res.Body).Decode(&errorResponse); err != nil {
+		t.Errorf("failed to decode error response body: %s", err.Error())
+	}
+
+	expectedErrorMessage := "Key 'nonexistent' not found"
+	if errorResponse.Message != expectedErrorMessage {
+		t.Errorf("unexpected error response message: got %s, want %s", errorResponse.Message, expectedErrorMessage)
 	}
 }
