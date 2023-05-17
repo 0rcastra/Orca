@@ -4,18 +4,23 @@ import (
 	"testing"
 
 	"github.com/0rcastra/Orca/cli/command"
+	"github.com/0rcastra/Orca/internal/data"
 )
 
 func TestSetCommand_Execute(t *testing.T) {
-	cmd := &command.SetCommand{}
+	db := data.NewDatabase()
 
-	args := []string{"key1", "value1"}
+	cmd := &command.SetCommand{
+		Database: db,
+	}
+
+	args := []string{"name", "seongbin"}
 	err := cmd.Execute(args)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	args = []string{"key2"}
+	args = []string{"age"}
 	err = cmd.Execute(args)
 	if err == nil {
 		t.Errorf("expected error, but got nil")
