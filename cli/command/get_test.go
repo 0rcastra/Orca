@@ -33,7 +33,18 @@ func TestGetCommand_Execute(t *testing.T) {
 		t.Errorf("unexpected output: got %q, want %q", strings.TrimSpace(output), expectedOutput)
 	}
 
-	expectedErrorMessage := "key nonexistent not found"
+	expectedErrorMessage := "invalid number of arguments for GET command"
+	output, err = utils.CaptureOutput(func() {
+		cmdErr := cmd.Execute([]string{})
+		if cmdErr == nil || cmdErr.Error() != expectedErrorMessage {
+			t.Errorf("unexpected error: got %v, want %s", cmdErr, expectedErrorMessage)
+		}
+	})
+	if err != nil {
+		t.Fatalf("failed to capture output: %s", err.Error())
+	}
+
+	expectedErrorMessage = "key nonexistent not found"
 	output, err = utils.CaptureOutput(func() {
 		cmdErr := cmd.Execute([]string{"nonexistent"})
 		if cmdErr == nil {
@@ -48,5 +59,16 @@ func TestGetCommand_Execute(t *testing.T) {
 	}
 	if output != "" {
 		t.Errorf("unexpected output: got %q, want empty string", output)
+	}
+}
+
+func TestGetCommand_Name(t *testing.T) {
+	cmd := &command.GetCommand{}
+	expectedName := "get"
+
+	name := cmd.Name()
+
+	if name != expectedName {
+		t.Errorf("unexpected command name: got %s, want %s", name, expectedName)
 	}
 }
