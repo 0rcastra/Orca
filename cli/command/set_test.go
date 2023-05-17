@@ -26,3 +26,14 @@ func TestSetCommand_Execute(t *testing.T) {
 		t.Errorf("expected error, but got nil")
 	}
 }
+
+func TestSetCommand_Name(t *testing.T) {
+	cmd := &command.SetCommand{}
+	expectedName := "set"
+
+	name := cmd.Name()
+
+	if name != expectedName {
+		t.Errorf("unexpected command name: got %s, want %s", name, expectedName)
+	}
+}
