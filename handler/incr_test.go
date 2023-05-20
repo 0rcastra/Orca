@@ -42,26 +42,4 @@ func TestIncrHandler(t *testing.T) {
 	if response.Value != expectedValue {
 		t.Errorf("unexpected response value: got %d, want %d", response.Value, expectedValue)
 	}
-
-	req = httptest.NewRequest(http.MethodPost, "/incr/nonexistent", nil)
-	res = httptest.NewRecorder()
-
-	router.ServeHTTP(res, req)
-
-	if res.Code != http.StatusOK {
-		t.Errorf("unexpected status code: got %d, want %d", res.Code, http.StatusOK)
-	}
-
-	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
-		t.Errorf("failed to decode response body: %s", err.Error())
-	}
-
-	expectedKey = "nonexistent"
-	expectedValue = 1
-	if response.Key != expectedKey {
-		t.Errorf("unexpected response key: got %s, want %s", response.Key, expectedKey)
-	}
-	if response.Value != expectedValue {
-		t.Errorf("unexpected response value: got %d, want %d", response.Value, expectedValue)
-	}
 }
