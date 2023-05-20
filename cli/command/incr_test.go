@@ -12,7 +12,6 @@ func TestIncrCommand_Execute(t *testing.T) {
 	db := data.NewDatabase()
 	cmd := &command.IncrCommand{Database: db}
 
-	// Test case 1: Increment existing key
 	key := "count"
 	db.Set(key, "5")
 
@@ -30,11 +29,21 @@ func TestIncrCommand_Execute(t *testing.T) {
 		t.Errorf("unexpected output: got %q, want %q", output, expectedOutput)
 	}
 
-	// Test case 2: Invalid number of arguments
 	args := []string{}
 	err = cmd.Execute(args)
 	expectedErrorMsg := "invalid number of arguments for INCR command"
 	if err == nil || err.Error() != expectedErrorMsg {
 		t.Errorf("unexpected error: got %v, want %s", err, expectedErrorMsg)
+	}
+}
+
+func TestIncrCommand_Name(t *testing.T) {
+	cmd := &command.IncrCommand{}
+	expectedName := "incr"
+
+	name := cmd.Name()
+
+	if name != expectedName {
+		t.Errorf("unexpected command name: got %s, want %s", name, expectedName)
 	}
 }
