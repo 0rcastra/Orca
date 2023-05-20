@@ -32,6 +32,21 @@ func TestDelCommand_Execute(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %s", err.Error())
 	}
+
+	args2 := []string{}
+	err2 := cmd.Execute(args2)
+	expectedErrorMsg2 := "invalid number of arguments for DEL command"
+	if err2 == nil || err2.Error() != expectedErrorMsg2 {
+		t.Errorf("unexpected error: got %v, want %s", err2, expectedErrorMsg2)
+	}
+
+	args3 := []string{"key1", "key2"}
+	err3 := cmd.Execute(args3)
+	expectedErrorMsg3 := "invalid number of arguments for DEL command"
+	if err3 == nil || err3.Error() != expectedErrorMsg3 {
+		t.Errorf("unexpected error: got %v, want %s", err3, expectedErrorMsg3)
+	}
+
 }
 
 func TestDelCommand_Name(t *testing.T) {
