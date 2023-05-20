@@ -43,3 +43,27 @@ func TestIncrHandler(t *testing.T) {
 		t.Errorf("unexpected response value: got %d, want %d", response.Value, expectedValue)
 	}
 }
+
+func TestIncrHandler_Error(t *testing.T) {
+	db := data.NewDatabase()
+	db.Set("count", "invalid")
+
+	req := httptest.NewRequest(http.MethodPost, "/incr/count", nil)
+	res := httptest.NewRecorder()
+
+	h := handler.NewHandler(db)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/incr/{key}", h.IncrHandler).Methods(http.MethodPost)
+
+	router.ServeHTTP(res, req)
+
+	if res.Code != http.StatusInternalServerError {
+		t.Errorf("unexpected status code: got %d, want %d", res.Code, http.StatusInternalServerError)
+	}
+
+	expectedErrorMessage := "failed to increment value for key 'count': value for key 'count' is not a valid integer: strconv.Atoi: parsing \"invalid\": invalid syntax\n"
+	if res.Body.String() != expectedErrorMessage {
+		t.Errorf("unexpected response body: got %q, want %q", res.Body.String(), expectedErrorMessage)
+	}
+}
