@@ -8,6 +8,31 @@ import (
 	"github.com/0rcastra/Orca/utils"
 )
 
+func TestIncrCommand_Execute_Error(t *testing.T) {
+	db := data.NewDatabase()
+	setCmd := &command.SetCommand{Database: db}
+	setErr := setCmd.Execute([]string{"name", "Seongbin"})
+	if setErr != nil {
+		t.Fatalf("unexpected error setting value: %s", setErr.Error())
+	}
+
+	cmd := &command.IncrCommand{Database: db}
+
+	expectedErrorMessage := "failed to increment value for key name: value for key 'name' is not a valid integer: strconv.Atoi: parsing \"Seongbin\": invalid syntax"
+	_, err := utils.CaptureOutput(func() {
+		cmdErr := cmd.Execute([]string{"name"})
+		if cmdErr == nil {
+			t.Errorf("expected error, got nil")
+		}
+		if cmdErr.Error() != expectedErrorMessage {
+			t.Errorf("unexpected error message: got %q, want %q", cmdErr.Error(), expectedErrorMessage)
+		}
+	})
+	if err != nil {
+		t.Fatalf("failed to capture output: %s", err.Error())
+	}
+}
+
 func TestIncrCommand_Execute(t *testing.T) {
 	db := data.NewDatabase()
 	cmd := &command.IncrCommand{Database: db}
