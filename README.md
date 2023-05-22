@@ -1,4 +1,5 @@
 # Orca
+[![Coverage Status](https://coveralls.io/repos/github/0rcastra/Orca/badge.svg?branch=main)](https://coveralls.io/github/0rcastra/Orca?branch=main)
 
 Redis like dictionary server in Go
 - [x] SET
