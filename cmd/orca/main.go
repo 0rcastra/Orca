@@ -30,6 +30,7 @@ func main() {
 	r.HandleFunc("/get/{key}", h.GetHandler).Methods("GET")
 	r.HandleFunc("/del/{key}", h.DelHandler).Methods("DELETE")
 	r.HandleFunc("/incr/{key}", h.IncrHandler).Methods("POST")
+	r.HandleFunc("/decr/{key}", h.DecrHandler).Methods("POST")
 
 	// Create the HTTP server
 	server := &http.Server{
