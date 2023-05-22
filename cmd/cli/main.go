@@ -32,6 +32,11 @@ func main() {
 	}
 	cli.RegisterCommand(incrCommand)
 
+	decrCommand := &command.DecrCommand{
+		Database: db,
+	}
+	cli.RegisterCommand(decrCommand)
+
 	clearScreen()
 
 	cli.Run()
