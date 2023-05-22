@@ -29,9 +29,5 @@ func (h *Handler) DecrHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to encode response: %v", err), http.StatusInternalServerError)
-		return
-	}
+	_ = json.NewEncoder(w).Encode(response)
 }
